@@ -1,56 +1,86 @@
-@demo_HostAddress = http://localhost:5279
-
-GET {{demo_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
-### Create a user
+### 🟢 Create user (valid)
 POST http://localhost:5279/users
 Content-Type: application/json
 
 {
   "username": "alice",
+  "userage": 25
+}
+
+### 🛑 Create user (missing username)
+POST http://localhost:5279/users
+Content-Type: application/json
+
+{
+  "username": "",
   "userage": 30
 }
 
-### Create another user
+### 🛑 Create user (invalid age)
 POST http://localhost:5279/users
 Content-Type: application/json
 
 {
   "username": "bob",
-  "userage": 25
+  "userage": 150
 }
 
-### Get all users
-GET http://localhost:5279/users
-
-### Get single user (existing)
-GET http://localhost:5279/users/alice
-
-### Get single user (non-existing)
-GET http://localhost:5279/users/charlie
-
-### Update user (existing)
-PUT http://localhost:5279/users/bob
+### 🛑 Create user (duplicate username)
+POST http://localhost:5279/users
 Content-Type: application/json
 
 {
-  "username": "bob", 
-  "userage": 26
+  "username": "alice",
+  "userage": 28
 }
 
-### Update user (non-existing)
+### 🟢 Create another valid user
+POST http://localhost:5279/users
+Content-Type: application/json
+
+{
+  "username": "charlie",
+  "userage": 35
+}
+
+### 🔍 Get all users
+GET http://localhost:5279/users
+
+### 🔍 Get user by username (exists)
+GET http://localhost:5279/users/alice
+
+### 🔍 Get user by username (does not exist)
+GET http://localhost:5279/users/nonexistent
+
+### 🟡 Update user (valid update)
 PUT http://localhost:5279/users/charlie
 Content-Type: application/json
 
 {
-  "username": "charlie", 
+  "username": "charlie",
   "userage": 40
 }
 
-### Delete user (existing)
+### 🛑 Update user (invalid age)
+PUT http://localhost:5279/users/charlie
+Content-Type: application/json
+
+{
+  "username": "charlie",
+  "userage": -5
+}
+
+### 🛑 Update user (not found)
+PUT http://localhost:5279/users/unknown
+Content-Type: application/json
+
+{
+  "username": "unknown",
+  "userage": 30
+}
+
+### 🗑️ Delete user (exists)
 DELETE http://localhost:5279/users/alice
 
-### Delete user (non-existing)
-DELETE http://localhost:5279/users/charlie
+### 🗑️ Delete user (not found)
+DELETE http://localhost:5279/users/unknown
